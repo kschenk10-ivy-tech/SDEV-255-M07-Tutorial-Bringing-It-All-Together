@@ -1,0 +1,40 @@
+<nav>
+	<h1><a href="/">1-Minute Cookies</a></h1>
+	<ul>
+		{{#if email}}
+			<li id="expiresIn"></li>
+			<li>Welcome, {{email}}</li>
+			<li><a href="/logout">Log out</a></li>
+		{{else}}
+			<li><a href="/login">Log in</a></li>
+			<li><a href="/signup" class="btn">Sign up</a></li>
+		{{/if}}
+	</ul>
+</nav>
+<script>
+	const cookies = document.cookie.split('; ')
+	
+	const expiryDateText = cookies.find(cookie=>{
+		if(cookie.includes('expiryDate=')){
+			return cookie
+		}
+	})
+
+	if(expiryDateText){
+		let expiresIn = Math.floor((Number(expiryDateText.split('=')[1])-Date.now())/1000)
+		function showExpiresIn(expiresIn){
+			document.getElementById('expiresIn').innerHTML = 
+				`Your session expires in ${expiresIn} seconds`;
+		}
+		if(expiresIn>0){
+			showExpiresIn(expiresIn)
+			setInterval(()=>{
+				if(expiresIn<2){
+					location.href = '/logout'
+				}
+				expiresIn--;
+				showExpiresIn(expiresIn)
+			},1000)
+		}
+	}
+</script>
