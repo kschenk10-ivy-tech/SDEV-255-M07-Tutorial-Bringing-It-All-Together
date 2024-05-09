@@ -1,39 +1,28 @@
-could use fetch api method where server sends back either json and then
-the single page front end dynamically injects the data into the html (like react).
-fetch post could be replaced with form submission method. these two are
-only needed for login or signup where you have to send username and password
-from front to back. but to send access tokens from front to back or back to front,
-use cookies.
-OR fetch again but this time the server sends back an html file,
-then front end js would result.text() parse it instead of result.json(),
-this would still be a single page app but the inner contents wouldnt
-be dynamically injected.
-OR could use a view engine such as handlebars (preferred for easier syntax)
-or ejs, which the server sends data directly into multiple html pages,
-aka server side rendering. more popular than previous methods.
+# SDEV-255-M07-Tutorial-Bringing-It-All-Together
 
-user authorization steps
-basically, during login, before client sends username and password to server
-via fetch or form, bcrypt encrypts password, then server checks database
-to see if login and password is correct, if correct, server creates a token
-with jwt with an expiration, then puts it in the client's cookie. when client
-visits a restricted page, server checks the cookies that were automatically sent
-by the get request, server checks cookies for the token and verifies it with middleware.
-if verified, middleware passes it to render the page.
+This project is a web application for student and teacher interaction. It allows teachers to create, update, and destroy courses, while students can add and remove courses to a shopping cart.
 
-now has session countdown timer that will auto logout. based on setInterval subtracting
-every second, expiresIn is based on the date when token is created + time give
-minus now. can be hacked if user inspects application and changes cookie expiryDate
-to a later date. but if token expires, at least if the user navigates to a new route,
-server will know token is expired and direct the user to logout.
+## Technology Stack
 
-to deploy to firebase, trying https://cloud.google.com/build/docs/deploying-builds/deploy-firebase
-had to enable api by going to console > apis and services > searching cloud build
-had to delete cloud-builders-community from explorer, doing it from the google cloud
-sdk shell didnt work. couldnt make firebase work.
+- Frontend: HTML, JavaScript, Tailwind CSS
+- Backend: Node.js with Express, MongoDB
 
-so trying app engine again. app.yaml is to deploy from vs code to app engine.
-https://www.youtube.com/watch?v=HgpCjChgjoQ&list=PL42xwJRIG3xCtmOrJAQFR5sIJFKIJ9MEn&index=2
-to set environment variables,
+## Authorization and Authentication
 
-workflow is push to github and app engine should auto deploy.
+For user authorization, the project follows these steps:
+
+1. **Login**: Before the client sends the username and password to the server, bcrypt encrypts the password. The server then checks the database to see if the login and password are correct. If correct, the server creates a token with JWT with an expiration, then puts it in the client's cookie.
+
+2. **Access Tokens**: To send access tokens from front to back or back to front, cookies are used. For login or signup, where you have to send the username and password from front to back, fetch post could be replaced with a form submission method.
+
+3. **Session Management**: The project includes a session countdown timer that will auto logout based on setInterval subtracting every second. expiresIn is based on the date when the token is created + time given minus now. If the token expires, when the user navigates to a new route, the server will know the token is expired and direct the user to logout.
+
+## Deployment
+
+To deploy to Firebase, you can follow the instructions [here](https://cloud.google.com/build/docs/deploying-builds/deploy-firebase). If you encounter issues, consider trying App Engine instead. app.yaml is used to deploy from VS Code to App Engine. Environment variables can be set using this approach.
+
+## Workflow
+
+The suggested workflow is to push to GitHub, and App Engine should auto-deploy the changes.
+
+For more details, you can refer to the [video tutorial series](https://www.youtube.com/watch?v=HgpCjChgjoQ&list=PL42xwJRIG3xCtmOrJAQFR5sIJFKIJ9MEn&index=2).
